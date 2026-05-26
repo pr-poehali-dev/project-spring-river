@@ -7,11 +7,13 @@ import { AboutSection } from "@/components/sections/about-section"
 import { ContactSection } from "@/components/sections/contact-section"
 import { MagneticButton } from "@/components/magnetic-button"
 import { useRef, useEffect, useState } from "react"
+import Icon from "@/components/ui/icon"
 
 export default function Index() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [currentSection, setCurrentSection] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const touchStartY = useRef(0)
   const touchStartX = useRef(0)
   const shaderContainerRef = useRef<HTMLDivElement>(null)
@@ -244,10 +246,43 @@ export default function Index() {
           ))}
         </div>
 
-        <MagneticButton variant="secondary" onClick={() => scrollToSection(4)}>
+        <MagneticButton variant="secondary" onClick={() => scrollToSection(4)} className="hidden md:flex">
           Связаться
         </MagneticButton>
+
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="flex h-10 w-10 items-center justify-center rounded-lg bg-foreground/15 backdrop-blur-md transition-all duration-300 hover:bg-foreground/25 md:hidden"
+        >
+          <Icon name={mobileMenuOpen ? "X" : "Menu"} size={20} className="text-foreground" />
+        </button>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      <div
+        className={`fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-black/90 backdrop-blur-xl transition-all duration-500 md:hidden ${
+          mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+      >
+        {["Главная", "Работы", "Услуги", "О нас", "Контакты"].map((item, index) => (
+          <button
+            key={item}
+            onClick={() => { scrollToSection(index); setMobileMenuOpen(false) }}
+            className={`font-sans text-3xl font-semibold transition-all duration-300 ${
+              currentSection === index ? "text-primary" : "text-foreground/70 hover:text-foreground"
+            } ${mobileMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}
+            style={{ transitionDelay: mobileMenuOpen ? `${index * 60}ms` : "0ms" }}
+          >
+            {item}
+          </button>
+        ))}
+        <button
+          onClick={() => { scrollToSection(4); setMobileMenuOpen(false) }}
+          className="mt-4 rounded-full bg-primary px-8 py-3 font-sans text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+        >
+          Связаться
+        </button>
+      </div>
 
       <div
         ref={scrollContainerRef}
