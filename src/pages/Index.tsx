@@ -260,28 +260,64 @@ export default function Index() {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-black/90 backdrop-blur-xl transition-all duration-500 md:hidden ${
-          mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        className={`fixed inset-0 z-40 md:hidden ${
+          mobileMenuOpen ? "pointer-events-auto" : "pointer-events-none"
         }`}
       >
-        {["Главная", "Работы", "Услуги", "О нас", "Контакты"].map((item, index) => (
-          <button
-            key={item}
-            onClick={() => { scrollToSection(index); setMobileMenuOpen(false) }}
-            className={`font-sans text-3xl font-semibold transition-all duration-300 ${
-              currentSection === index ? "text-primary" : "text-foreground/70 hover:text-foreground"
-            } ${mobileMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}
-            style={{ transitionDelay: mobileMenuOpen ? `${index * 60}ms` : "0ms" }}
+        {/* Clip-path reveal background */}
+        <div
+          className="absolute inset-0 bg-black/95 backdrop-blur-xl transition-all duration-700 ease-in-out"
+          style={{
+            clipPath: mobileMenuOpen
+              ? "circle(150% at calc(100% - 2.75rem) 2.75rem)"
+              : "circle(0% at calc(100% - 2.75rem) 2.75rem)",
+          }}
+        />
+
+        {/* Content */}
+        <div className="relative flex h-full flex-col justify-between px-8 pb-12 pt-28">
+          {/* Nav items */}
+          <nav className="flex flex-col gap-2">
+            {["Главная", "Работы", "Услуги", "О нас", "Контакты"].map((item, index) => (
+              <button
+                key={item}
+                onClick={() => { scrollToSection(index); setMobileMenuOpen(false) }}
+                className={`group flex items-center gap-4 py-3 text-left transition-all duration-500 ${
+                  mobileMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-8 opacity-0"
+                }`}
+                style={{ transitionDelay: mobileMenuOpen ? `${150 + index * 80}ms` : "0ms" }}
+              >
+                <span className={`font-mono text-xs transition-colors ${
+                  currentSection === index ? "text-primary" : "text-foreground/30"
+                }`}>0{index + 1}</span>
+                <span className={`font-sans text-4xl font-semibold leading-none transition-colors ${
+                  currentSection === index ? "text-primary" : "text-foreground/80"
+                }`}>{item}</span>
+              </button>
+            ))}
+          </nav>
+
+          {/* Contacts block */}
+          <div
+            className={`space-y-4 border-t border-foreground/10 pt-8 transition-all duration-500 ${
+              mobileMenuOpen ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+            }`}
+            style={{ transitionDelay: mobileMenuOpen ? "600ms" : "0ms" }}
           >
-            {item}
-          </button>
-        ))}
-        <button
-          onClick={() => { scrollToSection(4); setMobileMenuOpen(false) }}
-          className="mt-4 rounded-full bg-primary px-8 py-3 font-sans text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-        >
-          Связаться
-        </button>
+            <a href="mailto:atom@3et.ru" className="flex items-center gap-3 group">
+              <Icon name="Mail" size={14} className="text-primary" />
+              <span className="font-sans text-sm text-foreground/60 group-hover:text-foreground transition-colors">atom@3et.ru</span>
+            </a>
+            <a href="tel:+78121234567" className="flex items-center gap-3 group">
+              <Icon name="Phone" size={14} className="text-primary" />
+              <span className="font-sans text-sm text-foreground/60 group-hover:text-foreground transition-colors">+7 (812) 123-45-67</span>
+            </a>
+            <div className="flex items-center gap-3">
+              <Icon name="MapPin" size={14} className="text-primary" />
+              <span className="font-sans text-sm text-foreground/60">Санкт-Петербург, Автовская 17</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div
