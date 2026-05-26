@@ -368,7 +368,7 @@ export default function Index() {
           </div>
         </section>
 
-        <WorkSection />
+        <WorkSection onConsult={() => scrollToSection(4)} />
         <ServicesSection />
         <AboutSection scrollToSection={scrollToSection} />
         <ContactSection />
